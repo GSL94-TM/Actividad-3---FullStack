@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const tareasRoutes = require('./routes/tareasRoutes');
 const PORT = 3000;
 
 //Middleware integrado para poder leer peticiones en formato JSON
@@ -9,6 +10,9 @@ app.use(express.json());
 app.get('/', (req, res) => {
     res.json({ mensaje: 'API de Gestión de Tareas funcionando correctamente.' });
 });
+
+//Montar el enrutador CRUD bajo el prefijo /tareas
+app.use('/tareas', tareasRoutes);
 
 //Middleware Global para Manejo de Errores
 //Intercepta errores de sintaxis (ej. si el cliente envía un JSON mal formado)
