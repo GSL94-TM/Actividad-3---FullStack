@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const fs = require('fs').promises; //Importación de la versión asíncrona (Promesas)
 const path = require('path');
+const verificarToken = require('../middlewares/authMiddleware');
 
 //Ruta hacia el archivo tareas.json
 const dataPath = path.join(__dirname, '../data/tareas.json');
@@ -24,7 +25,7 @@ const guardarTareas = async (tareas) => {
 };
 
 //GET /tareas: Devuelve todas las tareas
-router.get('/', async (req, res, next) => {
+router.get('/', verificarToken, async (req, res, next) => {
     try {
         const tareas = await leerTareas();
         res.json(tareas);
@@ -34,7 +35,7 @@ router.get('/', async (req, res, next) => {
 });
 
 //POST /tareas: Agrega una nueva tarea
-router.post('/', async (req, res, next) => {
+router.post('/', verificarToken, async (req, res, next) => {
     try {
         const { titulo, descripcion } = req.body;
         
@@ -61,7 +62,7 @@ router.post('/', async (req, res, next) => {
 });
 
 //PUT /tareas/:id: Actualiza una tarea existente
-router.put('/:id', async (req, res, next) => {
+router.put('/:id', verificarToken, async (req, res, next) => {
     try {
         const { id } = req.params;
         const { titulo, descripcion, estado } = req.body;
@@ -89,7 +90,7 @@ router.put('/:id', async (req, res, next) => {
 });
 
 //DELETE /tareas/:id: Elimina una tarea
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', verificarToken, async (req, res, next) => {
     try {
         const { id } = req.params;
         const tareas = await leerTareas();

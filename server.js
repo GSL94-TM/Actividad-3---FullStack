@@ -1,18 +1,24 @@
 const express = require('express');
 const app = express();
-const tareasRoutes = require('./routes/tareasRoutes');
 const PORT = 3000;
+const tareasRoutes = require('./routes/tareasRoutes');
 
 //Middleware integrado para poder leer peticiones en formato JSON
 app.use(express.json());
+
+const { register, login } = require('./controllers/authController');
+
+// Rutas de Autenticación
+app.post('/register', register);
+app.post('/login', login);
+
+//Monta el enrutador CRUD bajo el prefijo /tareas
+app.use('/tareas', tareasRoutes);
 
 //Ruta inicial de prueba para confirmar que la API funciona
 app.get('/', (req, res) => {
     res.json({ mensaje: 'API de Gestión de Tareas funcionando correctamente.' });
 });
-
-//Montar el enrutador CRUD bajo el prefijo /tareas
-app.use('/tareas', tareasRoutes);
 
 //Middleware Global para Manejo de Errores
 //Intercepta errores de sintaxis (ej. si el cliente envía un JSON mal formado)
